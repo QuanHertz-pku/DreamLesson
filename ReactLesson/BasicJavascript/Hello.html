@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"  />
+        <title>Hello React</title>
+    </head>
+    <body>
+        <div>
+            <h1>Day1 Hello React</h1>
+            <h2>Class 1 : JavaScript</h2>
+            <h3>一，关于项目的管理</h3>
+            <pre>
+                关于项目的管理
+                1，首先，使用npm初始化项目，也就是我们这个DreamLesson
+                (这里-y表示所有的选项都是默认，无须自己配置)
+                <code lang="bash">npm init -y</code>
+                2，然后，使用npm安装依赖的方法是
+                <code lang="bash">npm install NameOfPackage</code>
+            </pre>
+            <h3>二，JavaScript变量声明</h3>
+            <pre>
+                开始实验吧！
+                <code lang="javascript">
+                    var a = 1; // 全局（函数内部？）作用域
+                    let b = 2;  // 块级作用域
+                    const c = 3; // 常量
+                </code>
+                实验一，在函数外调用var变量
+                <code lang="javascript">
+                    var a = 1;
+                    function test(){
+                        console.log("实验一:"+a);
+                    }
+                    test();
+                </code>
+                结果是输出1
+
+                实验二，在函数内调用var变量
+                <code lang="javascript">
+                    var a = 1;
+                    function test(){
+                        var a = 2;
+                        console.log(a);
+                    }
+                    test();
+                    console.log(a);
+                </code>
+                结果是输出2，后面是1
+            </pre>
+            <h3>三，JS模板字符串</h3>
+            <pre>
+                <code>
+                    let a=first;
+                    console.log(`${a},Welcome to React!`);
+                </code>
+                类似于bash模板字符串，但是需要使用反引号
+                可以免去使用字符串拼接的麻烦
+                还可以像pre元素一样，存储预格式化的文本
+                <code>
+                    let a=first;
+                    console.log(`
+                        ${a}
+                        Welcome to React!
+                    `);
+                </code>
+                在处理html的时候可以实现格式化！（或者文本等等）
+            </pre>
+            <h3>四，js函数</h3>
+            <pre>
+                函数声明
+                <code>
+                    test();
+                    //可以在函数声明前调用函数，函数声明类似于var，有作用域提升
+                    function test(){
+                        console.log("函数声明");
+                    }
+                </code>
+                函数表达式
+                <code>
+                    let test = function(){
+                        console.log("函数表达式");
+                    }
+                    test();//但是这个不能提前调用
+                </code>
+                箭头函数
+                <code>
+                    let test = () => {
+                        console.log("箭头函数"); // 箭头函数没有this，所以this的作用域还是父函数（如果有的话）！箭头指向的就是返回值
+                    }
+                    test();
+                </code>
+                函数参数
+                <code>
+                    let test = (a,b) => {
+                        console.log(a+b);
+                    }
+                    test(1,2);
+                </code>
+                函数返回值
+                <code>
+                    let test = (a,b) => {
+                        return a+b;
+                    }
+                    console.log(test(1,2));
+                </code>
+                函数返回对象
+                <code>
+                    let test = (a,b) => {
+                        return {a,b};
+                    }
+                    console.log(test(1,2));
+                    //或者
+                    let test = (a,b) => (
+                        {
+                            a,
+                            b
+                        });
+                </code>
+                函数参数默认值
+                <code>
+                    let test = (a,b=2) => {
+                        return a+b;
+                    }
+                    console.log(test(1));
+                </code>
+                函数参数解构
+                <code>
+                    let test = ({a,b}) => {
+                        return a+b;
+                    }
+                    console.log(test({a:1,b:2,c:3})); // 只取a和b
+                </code>
+                函数参数解构，数组
+                <code>
+                    let test = ([a,b]) => {
+                        return a+b;
+                    }
+                    console.log(test([1,2])); // 只取第一个和第二个
+                    let test2 = ([a,b,...rest]) => {
+                        return a+b+rest.join(","); // rest是数组
+                    }
+                    console.log(test2([1,2,3,4,5]));
+                </code>
+                展开运算符
+                <code>
+                    let arr1 = [1,2,3];
+                    let arr2 = [4,5,6];
+                    let arr3 = [...arr1,...arr2];
+                    console.log(arr3);
+                    //处理对象
+                    let obj1 = {name:'zhangsan',age:18};
+                    let obj2 = {sex:'male',height:180};
+                    let obj3 = {...obj1,...obj2};
+                    console.log(obj3);
+                </code>
+            </pre>
+            <p3>五，js异步编程</p3>
+            <pre>
+                1,使用fetch获得promise
+                <code>
+                    fetch('http://localhost:3000/api/getUserInfo').then((response)=>{
+                        return response.json();
+                    }).then((data)=>{
+                        console.log(data);
+                    }).catch((err)=>{
+                        console.log(err);
+                    });
+                </code>
+                2,使用ascync await 封装fetch方法
+                <code>
+                    async function getUserInfo(){
+                        let response = await fetch('http://localhost:3000/api/getUserInfo');
+                        let data = await response.json();
+                        console.log(data);
+                    }
+                </code>
+                3,构建promise
+                <code>
+                    let p = new Promise((resolve, reject)=>{
+                        const api='http://localhost:3000/api/getUserInfo';
+                        const request = new XMLHttpRequest();
+                        request.open('GET', api);
+                        request.onlaod
+                        
+                    });
+                </code>
+            </pre>
+        </div>
+        
+        <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+        <script>
+            
+        </script>
+    </body>
+</html>
