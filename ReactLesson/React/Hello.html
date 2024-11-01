@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Hello</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1>React基本概念</h1>
+        <h2>react概览</h2>
+        <pre>
+            两个库：
+                react：核心库，负责创建虚拟DOM，并把虚拟DOM渲染成真实的DOM
+                react-dom：负责把虚拟DOM渲染成真实的DOM
+            关于为什么要分开打包：
+                为编写react和react native共享组件的方便！
+            明明JavaScript就有DOM，为什么还要使用react？
+                无需考虑过多需要提高性能的地方！react已经实现了！
+        </pre>
+        <h2>开始使用react</h2>
+        <pre>
+            1.创建虚拟DOM：React.createElement()
+            <code>
+                const h1 = React.createElement('h1', null, 'Hello,React!');
+                //三个参数分别是：标签名（元素类型），属性对象（属性特性，例如calssName什么的），子节点
+                const div = React.createElement('div',{
+                    className:'box',
+                    style:{color:'red'}
+                }, h1);
+                //还有一个默认的属性：data-reactroot？这个暂时不需要我们考虑
+                //实际上如果你把h1 console.log() 一下，你就会发现很多问题
+                /*
+                $$typeof: Symbol(react.element)
+                key: null
+                props: 
+                    children: "Hello,React!"
+                    [[Prototype]]: Object
+                ref: null
+                type: "h1"
+                _owner: null
+                _store: {validated: false}
+                _self: null
+                _source: null
+                [[Prototype]]: Object
+                */
+                //这些字段，包括_owner,_store,$$typeof这些,都是react内部使用的，我们不需要考虑
+                //key和ref对react来说非常重要！我们后面会讲到
+            </code>
+
+            2.把虚拟DOM渲染成真实的DOM：ReactDOM.render()
+
+            <code>
+                ReactDOM.render(div, document.getElementById('react-containner'));
+                //你应该可以在下面看到一个div，里面有一个h1标签，并且h1标签的文字是Hello,React!
+            </code>
+            <div id="react-containner"></div>
+            3.react创建组件树
+            <code>
+                React.createElement("ul",null,
+                    React.createElement("li",null,"1"),
+                    React.createElement("li",null,"2"),
+                    React.createElement("li",null,"3")
+                );
+                //是的，你确实可以这样写，但是不建议这样写，因为太麻烦了，我们后面会讲到更好的写法
+                //并且还可以多次嵌套，但是实际上我们可以使用JSX语法，我们后面会讲到
+                //当然，如果你的元素已经储存在数组里了，那么我们可以用map直接得到元素了
+                React.createElement("ul",null,list.map(item=>React.createElement("li",null,item)))
+                //但是这样被报错了！因为React希望每一个元素都有一个key，所以我们需要为每一个元素都添加上key属性
+                React.createElement("ul",null,list.map((item,i)=>React.createElement("li",{key:i},item)))
+                //顺便也就说明了，map的第二个参数是索引数
+
+            </code>
+            4，可复用的组件模板 react.createClass()
+            NONONO!这个方法已经被react16放弃了qwq，算了吧~
+            <code>
+                const IngredientList = React.createClass({
+                    displayName:'IngredientList',
+                    render(){
+                        return React.createElement("ul",null,
+                            this.props.list.map((item,i)=>React.createElement("li",{key:i},item))
+                        )
+                    },
+                });
+                const list=['1','2','3'];
+                ReactDOM.render(React.createElement(IngredientList,{list},null),document.getElementById('react-containner2'));
+            </code>
+            <pre>
+                5，现在使用组件模板：component
+            </pre>
+            <code>  
+                class IngredientList extends React.Component{
+                    render(){
+                        return React.createElement("ul",null,
+                            this.props.list.map((item,i)=>React.createElement("li",{key:i},item))
+                            //这里的this.props就是我们传入的属性！
+                            //使用属性来渲染子组件的方法还挺有新意的
+                        )
+                    }
+                }
+                const list=['1','2','3'];
+                ReactDOM.render(React.createElement(IngredientList,{list},null),document.getElementById('react-containner2'));
+                //这次应该能看到了吧
+            </code>
+            <pre>
+                6,函数式组件
+            </pre>
+            <code>
+                const IngredientList = (props)=>{
+                    return React.createElement("ul",{className:Ingredients},
+                        props.list.map((item,i)=>React.createElement("li",{key:i},item))
+                    )
+                    //这里不是用属性来渲染子组件了！
+                }
+            </code>
+            <pre>
+                7,使用工厂类来渲染组件
+            </pre>
+            <code>
+                //内置的工厂类
+                React.DOM.h1(null,"hello")
+                //自定义的工厂类组件
+                const IngredientList = (props)=>{
+                    return React.createElement("ul",{className:Ingredients},
+                        props.list.map((item,i)=>React.createElement("li",{key:i},item))
+                    )
+                }
+                const Ingredients = React.createFactory(IngredientList);
+                ReactDOM.render(Ingredients({list},null),document.getElementById('react-containner2'));
+            </code>
+            <div id="react-containner2"></div>
+            但是，我必须要说！这里写的大抵是不会用到了！我们有JSX！！！！
+        </pre>
+        <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script>
+            const h1 = React.createElement('h1', null, 'Hello,React!');
+            console.log(h1);
+            const div = React.createElement('div',{
+                className:'box',
+                style:{color:'red'}
+            }, h1);
+            ReactDOM.render(div, document.getElementById('react-containner'));
+            class IngredientList extends React.Component{
+                render(){
+                    return React.createElement("ul",null,
+                        this.props.list.map((item,i)=>React.createElement("li",{key:i},item))
+                    )
+                }
+            }
+            const list=['tomato','potato','salt'];
+            ReactDOM.render(React.createElement(IngredientList,{list},null),document.getElementById('react-containner2'));
+        </script>
+    </body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>  
+    <head>
+
+    </head>
+    <body> 
+        <h1>使用javascript编程的原则=》有助于维护和提高性能</h1>
+        <pre>
+            1.使用函数形式的编程，函数是你的第一公民，函数可以作为参数和返回值
+                javascript为函数的使用提供了前所未有的巨大便利。
+                而且满足使用高阶函数，可以简化函数之间的数据传递，直接把一个函数作为另一个函数的参数。
+            2，所以，也就决定了javascript编程是一种声明式编程，而不是命令式编程。
+                多多使用let！还有const。尽全力不使用var。
+            3.函数式编程意味着数据是不能改变的，不是真的不能改变，而是我们不希望改变数据！
+                我们不希望改变任何得到过的数据从而失去原来的数据，我们在使用数据的时候，更加倾向于得到一个修改后的副本，而不是改动的原版
+            4，函数式编程希望使用更多的纯函数=》所谓纯函数也就是不会使用全局变量（甚至不希望直接调用不是参数的函数！）
+                这样一来，函数的结果就完全取决于输入的参数，而和运行环境无关，这是一个函数正常运作的重要保证！
+            5，使用map和reduce等工具实现数组的映射和转化！非常的牛叉！
+                样例应该是下面这样
+                <code>
+                    const user=[
+                        {name:'zhangsan',age:18},
+                        {name:'lisi',age:19},
+                        {name:'wangwu',age:20}
+                    ];
+                    //使用join 实现字符串拼接
+                    console.log(user.map(item=>item.name).join('-'));
+                    //使用filter实现条件过滤
+                    console.log(user.filter(item=>item.age>18));
+                    //这就是函数式编程的魅力，你可以把一个用来判断条件的函数作为参数传入另一个函数，得到一个自定义性质慢慢的函数！
+                    //用filter代替splice！因为splice会不断的改变原本的变量！
+                    //使用map！
+                    
+                    const newUser=user.filter(item=>item.age>18).map(item=>({
+                        name:item.name,
+                        age:item.age
+                    }));
+                    console.log(newUser);
+                    
+                    当然，更好的办法是用一个函数来包装好map，这样我们的声明式才更加清晰！
+                    const filterAndMap=(users)=>users.filter(item=>item.age>18).map(item=>({
+                        name:item.name,
+                        age:item.age
+                    }));
+                    const newUser=filterAndMap(user);
+
+                    //还有一个问题，如果一个对象的key我是不知道的，那么我可以使用Object.keys()来获取所有的key，然后使用map方法来遍历所有的key，然后使用[]来获取对应的值。
+                    const getValue=(obj)=>Object.keys(obj).map(item=>obj[item]);
+                    //注意！上面的item传入的是key，也就是一个字符串，神奇吧。
+                    //当然，map是一个数组的方法，每次向参数传递数组中的一个元素！然后把所有的返回值组合成一个数组。
+
+                    //使用reduce！
+                    const sum=(pre,cur)=>pre+cur;
+                    const sumArray=[1,2,3,4,5].reduce(sum,0);
+                    console.log(sumArray);
+                    //reduce的参数是函数，函数的参数是前一次的返回值和当前值，返回值就是下一个参数！
+                    //前一个参数是上一次调用的返回值，后一个参数是从数组中取出来的新值！
+                    //reduce的返回值就是最终的返回值！
+
+                    //使用高阶函数
+                    const invokif=(conditon,FnTrue,FnFalse)=>{
+                        return conditon?FnTrue():FnFalse();
+                    };
+                    const FnTrue=()=>console.log('true');
+                    const FnFalse=()=>console.log('false');
+                    const show=invokif(true,()=>'show',()=>'hide');
+                    //没啥稀奇的就是简单的把函数作为参数而已，map和dreduce就是这样的。
+                </code>
+                牢记！函数编程的宗旨！维护维护维护！
+                不要把逻辑写死，要把关系写清楚，然后只需要维护和更新底层就可以啦！
+        </pre>
+       
+        <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+        <script>
+            const user=[
+                {name:'zhangsan',age:18},
+                {name:'lisi',age:19},
+                {name:'wangwu',age:20}
+            ];
+            //使用join 实现字符串拼接
+            console.log(user.map(item=>item.name).join('-'));
+            const newUser=user.filter(item=>item.age>18).map(item=>({
+                name:item.name,
+                age:item.age
+            }));
+            console.log(newUser);
+            const sum=(pre,cur)=>pre+cur;
+            const sumArray=[1,2,3,4,5].reduce(sum);
+            console.log(sumArray);
+        </script>
+    
+
+    </body>
+
+
+</html>
+
+
+
+
