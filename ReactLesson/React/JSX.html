@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+        <h1>JSX->在JAVAscript中写HTML！</h1>
+        <h2>jsx语法</h2>
+        <pre>
+            怎么写？就是HTML啊
+        </pre>
+        <code id="code">
+        </code>
+        <h2>使用babel编译JSX</h2>
+        <pre>
+            js是一个解释性的语言，类似于python
+            所以，浏览器和node.js只是一个runtime，并不能支持不是js原生的代码
+            所以，如果我们想要使用jsx，就必须要编译（这里说成转译也许更合适）一下，也就是把我们的代码转化成原生js
+            这就是Babel！
+
+            我们有很多方法可以使用babel，包括使用npm下载，但是这里我们选择使用cdn引入包的方式
+            （实际开发的时候肯定是本地依赖）
+            <div id="babel"></div>
+        </pre>
+        <pre>
+            在render的时候可以直接使用定义过的函数式component！
+        </pre>
+        <div id="comp"></div>
+
+        <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        <script type="text/babel">
+            const textarea = `
+            const element = <h1>Hello, world!</h1>;
+            //如果需要用到js中的表达式或者变量，就用{}
+            const element = <h1>Hello, {name}</h1>;
+            //表达式子也可以(甚至可以调用函数)
+            const element = <div>{new Date().toLocaleTimeString()}</div>;
+            //属性中也可以插入
+            const element = <img src={user.avatarUrl}></img>;
+            //甚至可以直接返回一个react element的数组
+            const element = (
+                <ul>
+                    {
+                        this.props.users.map(user => (
+                            <li key={user.id}>{user.name}</li>
+                        ))
+                    }
+                </ul>
+            );`
+            const exam = `
+            https://unpkg.com/@babel/standalone/babel.min.js
+            还要标识：type="text/babel"
+            `
+            const s=`
+            const Smile=() => <span>:)</span>
+            ReactDOM.render(
+                <Smile/>,
+                document.getElementById('comp')
+            )
+            `
+            ReactDOM.render(
+                <pre>{textarea}</pre>,
+                document.getElementById('code')
+            );
+            ReactDOM.render(
+                <pre>{exam}</pre>,
+                document.getElementById('babel')
+            );
+            ReactDOM.render(
+                <pre>{s}</pre>,
+                document.getElementById('comp')
+            )
+        </script>
+
+    </body>
+</html>

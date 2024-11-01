@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+    </head>
+    <body>
+        <h1>Props,State和组件树</h1>
+        <h2>属性的变量类型验证</h2>
+        <pre>
+            很明显，javascript是一个弱变量类型的语言，很类似于python
+            但是这样就会有问题
+
+            所以，我们有一个对于变量类型的属性验证器
+            在React中
+            React.PropTypes.
+            .后面可以是：
+                array
+                bool
+                func
+                number
+                object
+                string
+            <code>
+                //那么要使用属性检验，一定实在一个组件中！
+                //首先来一个组件
+                class Hello extends React.Component{
+                    displayName:'Hello',
+                    propTypes = {
+                        name:React.PropTypes.string //这里安排了一个类型检验，确保name是一个字符串
+                        // name:React.PropTypes.isRequired() 也可以声明一个属性的必须性
+                    },
+                    render(){
+                        return (
+                            &lt;div&gt;
+                                &lt;h1&gt;{this.props.name}&lt;/h1&gt;
+                            &lt;/div&gt;
+                        )
+                    }
+                }
+            </code>
+            当然，我们还可以给属性设置默认值，这样子就算在创建组件的时候就算没有传送参数也可以正常使用组件
+            <code>
+                class Hello extends React.Component{
+                    displayName:'Hello',
+                    propTypes = {
+                        name:React.PropTypes.string
+                    },
+                    //设置默认值
+                    getDefaultProps(){
+                        return {
+                            name:'default'
+                        }
+                    },
+                    render(){   //小小提醒一下，这里使用render需要import {reader} form 'react'(也可以直接在全局APP.js里面import)
+                        return (
+                            &lt;div&gt;
+                                &lt;h1&gt;{this.props.name}&lt;/h1&gt;
+                            &lt;/div&gt;
+                        )
+                    }
+                }
+            </code>
+            当然，react也准备好了给你自定义的验证属性类型的机制！
+            <code>
+                class Hello extends React.Component{  //好吧，我承认，我们应该更加倾向于使用函数式的组件
+                    displayName:'Hello',
+                    propTypes = {
+                        name:(props,propName,componentName) => {
+                            //这里可以自定义验证规则，如果验证失败，会返回一个错误信息
+                            //这里可以返回一个错误信息，但是一定要使用Error对象来返回
+                            //return new Error('error message')
+                        }
+                    },
+                }
+                //那么补充一下函数式组件的写法
+                const Hello = (props) => {
+                    return (
+                        &lt;div&gt;
+                            &lt;h1&gt;{props.name}&lt;/h1&gt;
+                        &lt;/div&gt;
+                    )
+                }
+                Hello.propTypes = {
+                    name:React.PropTypes.string
+                    //同理，自定义验证也是写在这里
+                }
+                Hello.defaultProps = {
+                    name:'default'
+                }
+            </code>
+            新的特性是使用static propTypes = {}来定义属性验证器
+            <code>
+                class Hello extends React.Component{
+                    static propTypes = {
+                        name:React.PropTypes.string
+                    }
+                    static defaultProps = {
+                        name:'default'
+                    }
+                }
+            </code>
+            最好形成写属性验证的习惯，这样子的组件将会更加容易复用
+            当然，属性是传入之后不可更改的，我们要实现动态操作要靠state和ref
+
+            还有一点，就是这些都可以在constructor里面定义，但是，在ES6中，我们推荐使用class语法来定义组件
+            <code>
+                class Hello extends React.Component{
+                    constructor(props){
+                        super(props)  //这个是必要的！传递给父组件Component来正确的初始化
+                        //这里定义一个state
+                        this.state = {
+                            name:'default'
+                        }
+                    }
+                }
+            </code>
+        </pre>
+        <h2>ref 引用</h2>
+        <pre>
+            突然觉得使用类来实现组件还是很香的qwq
+            <code>
+                class Hello extends React.Component{
+                    //这里定义一个ref
+                    const _input = this.refs._input
+                    //然后定义一个方法
+                    focus = () => {
+                        //focus是用来把焦点放置在这个输入框上
+                        this.input.focus()
+                    }
+                    render(){
+                        return (
+                            &lt;div&gt;
+                                //当然了，下面这里也可以通过 ref= '_input'来实现，并且我们习惯上把它命名为_input
+                                &lt;input type='text' ref={(_input) => this._input = _input} /&gt;
+                                &lt;button&gt; onClick={this.focus}>focus&&lt;/button&gt;
+                        )
+                    }
+                }
+            </code>
+            简单说，ref就是把组件内的元素（注意，这里似乎并没有办法可以改变组件的属性！）引用起来，（双向）传递到组件外的函数中
+        </pre>
+        <h2>State 状态管理</h2>
+        <pre>
+            组件的属性是一旦渲染之后不可更改的，所以，我们有时候需要重新渲染组件
+            我们使用一个Star Rating的例子来看看State管理是怎么重新渲染组件的
+            <code>
+                class StarRating extends React.Component{
+                    displayName:'StarRating',
+                    propTypes = {
+                        ratingTotal:React.PropTypes.number
+                    }
+                    //这里定义了一个初始状态
+                    state = {  //这里是组件的state
+                        rating:0
+                    }
+                    //这里定义了一个方法，用来改变状态
+                    handleClick = (e) => {
+                        //这里使用setState来改变状态，并且把新的状态传递给组件
+                        this.setState({ //设置State的函数，但是应当尽量减少使用，因为每用一次就会触发刷新
+                            rating:e.target.value
+                        })
+                    }
+                    render(){
+                        const {ratingTotal} = this.props;
+                        const {rating} = this.state;
+                        //这里使用state来渲染组件
+                        return (
+                            &lt;div&gt;
+                                &lt;h1&gt;{this.state.rating}&lt;/h1&gt;
+                                &lt;input type='range' min='0' max='5' step='1' value={this.state.rating} onChange={this.handleClick} /&gt;
+                        )
+                    }
+                }
+            </code>
+            然而，我们应该尽量减少有状态组件的存在，这会很影响性能
+            所以，我们可以看到，State和Ref的区别是：
+            
+        </pre>
+
+    </body>
+<html>

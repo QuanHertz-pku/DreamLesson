@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Webpack</title>
+</head>
+
+<body>
+    <h1>使用Webpack管理React模块=》分模块编程的伟大之处</h1>
+    <pre>
+        为什么我们需要webpack？
+        1，打包和压缩模块！实现优化
+        2，监控变更，实现热变换
+        
+        转移 ？ 打包？
+        可以！比如scss文件就是由webpack文件实现转译的！这个是webpack加载器的作用！在webpack.config,js中声明
+    
+        怎么分模块写呢？
+        直接export！
+    </pre>
+    <pre>
+    <code>
+        //在储存一个组件的文件的末尾
+        export default HelloWorld;
+        //在要使用这个组件的文件的开头（或者script标签的开头）
+        import HelloWorld from './HelloWorld';
+        //然后和正常的一样使用
+
+        //只有在index.js中需要import React from 'react'
+        import ReactDOM from 'react-dom';
+        //还有！
+        window.React = React;
+        //这样子我们的React就 globally available了,其他组件不需要import!
+    </code>
+    </pre>
+    <pre>
+        但是由于webpack的特殊性，我们如果要实验webpack的打包就必须要安装webpack的依赖！
+        所以后面我们就干脆把react,react-dom,babel-core,babel-loader,babel-preset-env
+        babel-preset-react,babel-preset-stage-0,creat-reacrt-app,还有webpack这些工具都下载了
+    
+        值得高兴的是create react app已经帮助我们实现了构建项目所需要做的各个事情
+        但是，我们仍然需要简单了解这样的文件结构(下面是必要的文件):
+        1，public
+            index.html 我们网站的入口，所有的工作只是导入我们打包好的bundle.js而已
+        2，src
+            index.js
+            App.js  //好消息是，在这里import了的react，render什么的是全局导入！
+        3,webpack.config.js 这里是配置webpack的地方！（唉，我的文件里没有唉，也许是新版本不一样了）
+        4,package.json（原来是webpack,babel,ESLint等都被放在react-scripts里了!）
+        关注create-react-app吧
+        https://github.com/facebook/create-react-app
+    </pre>
+
+</body>
+
+</html>
